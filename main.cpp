@@ -328,6 +328,7 @@ public:
 };
 
 
+// Function that makes an upper triangular matrix from the given one
 SquareMatrix makeUpperTrinagular(Matrix& matrix, Matrix& e, int& steps) {
     int pivots = 0;
     for (int j = 0; j < matrix.getM(); j++) {
@@ -363,6 +364,7 @@ SquareMatrix makeUpperTrinagular(Matrix& matrix, Matrix& e, int& steps) {
 }
 
 
+// Function that makes a down triangular matrix from the given one
 SquareMatrix makeDownTrinagular(Matrix& matrix, Matrix& e, int& steps, bool second) {
     int pivots = 0;
     for (int j = matrix.getM() - 1; j > 0; j--) {
@@ -400,6 +402,7 @@ SquareMatrix makeDownTrinagular(Matrix& matrix, Matrix& e, int& steps, bool seco
 }
 
 
+// Function that checks if the matrix is singular
 bool isSingular(SquareMatrix matrix) {
     int c = 0;
     SquareMatrix tmp(IdentityMatrix(matrix.getN()));
@@ -413,6 +416,7 @@ bool isSingular(SquareMatrix matrix) {
 }
 
 
+// Function that normalizes a diagonal matrix
 SquareMatrix diagonalNormalization(SquareMatrix& matrix, Matrix& e) {
     for (int i = 0; i < matrix.getN(); i++) {
         if (matrix.getElem(i, i) == 0) {
@@ -426,6 +430,7 @@ SquareMatrix diagonalNormalization(SquareMatrix& matrix, Matrix& e) {
 }
 
 
+// Function that calculates inverse matrix
 SquareMatrix findInverse(SquareMatrix matrix) {
     int c = 0;
     if (isSingular(matrix)) {
@@ -439,6 +444,7 @@ SquareMatrix findInverse(SquareMatrix matrix) {
 }
 
 
+// Function that checks if the solution vaild for given constraints
 bool checkValidity(const ColumnVector& solution, const Matrix& a, const ColumnVector& b) {
     ColumnVector constraints = a * solution;
     for (int i = 0; i < b.getN(); i++) {
@@ -450,17 +456,21 @@ bool checkValidity(const ColumnVector& solution, const Matrix& a, const ColumnVe
 }
 
 
+// Function that calculates the projection of aPrime in the formula for p
 Matrix findProjection(const Matrix& a) {
     Matrix aTranspose = a.transpose();
     return aTranspose * findInverse(a * aTranspose) * a;
 }
 
 
+// Interior point algorithm function
 ColumnVector interiorPoint(ColumnVector solution, Matrix a, ColumnVector b, Matrix c, double alpha, double epsilon) {
     ColumnVector prevSolution(solution.getN(), INFINITY);
+    // Check that the given solution is valid
     if (!checkValidity(solution, a, b)) {
         throw invalid_argument("Error: solution is not valid\n");
     }
+    // Iterate the algorithm while the solution is not accurate enough
     while (abs(solution.norm() - prevSolution.norm()) > epsilon) {
         double beta = -1;
         DiagonalMatrix d(solution);
@@ -479,6 +489,20 @@ ColumnVector interiorPoint(ColumnVector solution, Matrix a, ColumnVector b, Matr
     }
     return solution;
 }
+
+
+/*
+Input example:
+max
+2 4
+1 1 0 0
+2 4 1 0
+1 3 0 -1
+16 9
+0.5 3.5 1 2
+0.5
+0.000001
+*/
 
 
 int main() {
@@ -521,16 +545,3 @@ int main() {
         cout << ex.what() << "\n";
     }
 }
-
-
-/*
-max
-2 4
-1 1 0 0
-2 4 1 0
-1 3 0 -1
-16 9
-0.5 3.5 1 2
-0.5
-0.000001
-*/

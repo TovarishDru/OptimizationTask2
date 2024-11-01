@@ -539,7 +539,8 @@ int main() {
         cin >> epsilon;
         x = interiorPoint(x, a, b, c, alpha, epsilon);
         x.roundValue = pow(10, abs(log10(epsilon)));
-        cout << "Result:\n" << x;
+        cout << "Result:\n" << x.transpose();
+        cout <<  x.transpose() * c;
     }
     catch (const exception& ex) {
         cout << ex.what() << "\n";

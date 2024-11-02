@@ -493,7 +493,6 @@ ColumnVector interiorPoint(ColumnVector solution, Matrix a, ColumnVector b, Matr
 
 /*
 Input example:
-max
 2 4
 1 1 0 0
 2 4 1 0
@@ -507,9 +506,6 @@ max
 
 int main() {
     try {
-        cout << "Input the type of problem (min/max):\n";
-        string type;
-        cin >> type;
         cout << "Input the number of constraints and number of variables in objective function:\n";
         int constraintsNumber, variablesNumber;
         cin >> constraintsNumber >> variablesNumber;
@@ -517,9 +513,6 @@ int main() {
         Matrix cInput(1, variablesNumber);
         cin >> cInput;
         ColumnVector c = cInput.transpose();
-        if (type == "min") {
-            c = c * -1;
-        }
         cout << "Input the matrix of coefficients of constraint function:\n";
         Matrix a(constraintsNumber, variablesNumber);
         cin >> a;
@@ -539,8 +532,9 @@ int main() {
         cin >> epsilon;
         x = interiorPoint(x, a, b, c, alpha, epsilon);
         x.roundValue = pow(10, abs(log10(epsilon)));
-        cout << "Result:\n" << x.transpose();
-        cout <<  x.transpose() * c;
+        cout << "Result solution vector:\n" << x.transpose();
+        cout << "Numerical result:\n";
+        cout << x.transpose() * c;
     }
     catch (const exception& ex) {
         cout << ex.what() << "\n";
